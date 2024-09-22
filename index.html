@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/sass.js/0.9.2/sass.min.js"
+      integrity="sha512-mA5b7w9mZvGLWgjIqp9KhWNzkkZ/H3gC4Ua6GOn9m/xl1UF4ghH8GsriKvAYxLsxoKvn6NdebW7kZ6iGB3CGSg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <style lang="scss">
+      #app {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+
+        .filter {
+          margin-bottom: 20px;
+          select {
+            padding: 5px;
+            font-size: 16px;
+          }
+        }
+
+        ul {
+          list-style-type: none;
+          padding: 0;
+          li {
+            background-color: #f9f9f9;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+            h2 {
+              margin: 0;
+              font-size: 18px;
+            }
+
+            p {
+              margin: 5px 0;
+            }
+
+            button {
+              background-color: #007bff;
+              color: white;
+              border: none;
+              padding: 10px;
+              border-radius: 5px;
+              cursor: pointer;
+              &:hover {
+                background-color: #0056b3;
+              }
+            }
+
+            div {
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="filter">
+        <label for="category">Toifa bo'yicha filtr:</label>
+        <select id="category" v-model="selectedCategory">
+          <option value="">Barchasi</option>
+          <option
+            v-for="category in categories"
+            :key="category"
+            :value="category"
+          >
+            {{ category }}
+          </option>
+        </select>
+      </div>
+
+      <ul>
+        <li v-for="product in filteredProducts" :key="product.name">
+          <h2>{{ product.name }} - {{ product.price }} $</h2>
+          <p v-if="product.available">Mavjud</p>
+          <p v-else>Mavjud emas</p>
+          <button @click="product.showDetails = !product.showDetails">
+            Batafsil
+          </button>
+          <div v-show="product.showDetails">
+            <p>Toifa: {{ product.category }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      new Vue({
+        el: "#app",
+        data() {
+          return {
+            selectedCategory: "",
+            products: [
+              {
+                name: "Laptop",
+                price: 1200,
+                category: "Elektronika",
+                available: true,
+                showDetails: false,
+              },
+              {
+                name: "Smartphone",
+                price: 800,
+                category: "Elektronika",
+                available: true,
+                showDetails: false,
+              },
+              {
+                name: "Sovutgich",
+                price: 600,
+                category: "Maishiy texnika",
+                available: false,
+                showDetails: false,
+              },
+              {
+                name: "Stol",
+                price: 150,
+                category: "Mebel",
+                available: true,
+                showDetails: false,
+              },
+            ],
+          };
+        },
+        computed: {
+          filteredProducts() {
+            if (this.selectedCategory) {
+              return this.products.filter(
+                (product) => product.category === this.selectedCategory
+              );
+            }
+            return this.products;
+          },
+          categories() {
+            return [
+              ...new Set(this.products.map((product) => product.category)),
+            ];
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
